@@ -12,12 +12,9 @@ const upload = multer({
 
 // const { getUsers, signUp, signIn } = require("../controllers/user_controller");
 
-router.get('/', (req, res) => {
-  console.log('article');
-})
-router.post('/', (req, res) => {
-  console.log('article');
-})
+router.get('/', getArticle)
+router.post('/', upload.single('image'), sendUploadToGCS, addArticle)
+
 router.put('/:id', (req, res) => {
   console.log('article');
 })

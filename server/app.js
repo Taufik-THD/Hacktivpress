@@ -9,7 +9,7 @@ const indexRouter = require('./routes/index')
 const itemsRouter = require('./routes/users')
 
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://livecode:qwerpilkopi0***@ds127811.mlab.com:27811/livecode', (req, res) => {
+mongoose.connect('mongodb://livecodephase2:qwerpilkopi0***@ds127811.mlab.com:27811/livecode', (req, res) => {
   console.log('database connected!');
 })
 

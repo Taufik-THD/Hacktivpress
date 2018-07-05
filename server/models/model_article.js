@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
 const articleSchema = new Schema({
-  author: { type:String },
-  category: { type:Number },
-  article: { type:Number },
+  title: { type:String },
+  category: { type:String },
+  article: { type:String },
   picture: { type:String },
   UserId: { type:String, ref: 'User' },
   time: { type:String }
@@ -14,4 +14,4 @@ const articleSchema = new Schema({
 
 const Article = mongoose.model('Article', articleSchema)
 
-module.exports = Item;
+module.exports = Article;
