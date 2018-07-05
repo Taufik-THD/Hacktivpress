@@ -8,22 +8,22 @@
               <h4 style="text-align:center; color:white" ><b>Sign Up</b> </h4>
               <div class="row">
                 <div class="input-field col s12" style="padding-right:15px;">
-                  <input id="fullname" type="text" class="validate" style="color:white;" v-model='userData.fullname'>
+                  <input id="fullname" type="text" class="validate" style="color:white;" v-model='RegisterData.fullname'>
                   <label for="fullname" style="color:white;">Full Name</label>
                 </div>
                 <div class="input-field col s12" style="padding-right:15px;">
-                  <input id="email" type="text" class="validate" style="color:white;" v-model='userData.email'>
+                  <input id="email" type="text" class="validate" style="color:white;" v-model='RegisterData.email'>
                   <label for="email" style="color:white;" >Email</label>
                 </div>
                 <div class="input-field col s12" style="padding-right:15px;">
-                  <input id="password" type="password" class="validate" style="color:white;" v-model='userData.password' v-on:keyup='checkLength'>
+                  <input id="password" type="password" class="validate" style="color:white;" v-model='RegisterData.password' v-on:keyup='checkLength'>
                   <label for="password" style="color:white;" >Password</label>
                 </div>
                 <div class="col">
                   <label v-if="validation == false" style="color:white;">Password minimum 6 character . . .</label>
                 </div>
                 <div class="input-field col s12" style="padding-right:15px;">
-                  <input id="confirmpassword" type="password" class="validate" style="color:white;" v-model='userData.confirmpassword' v-on:keyup='checkSame'>
+                  <input id="confirmpassword" type="password" class="validate" style="color:white;" v-model='RegisterData.confirmpassword' v-on:keyup='checkSame'>
                   <label for="confirmpassword" style="color:white;" >Confirm Password</label>
                 </div>
                 <div class="col">
@@ -52,17 +52,17 @@
               <h4 style="text-align:center; color:white" ><b>Sign In</b> </h4>
               <div class="row">
                 <div class="input-field col s12" style="padding-right:15px;">
-                  <input id="email" type="text" class="validate" style="color:white;" v-model='userData.email'>
+                  <input id="email" type="text" class="validate" style="color:white;" v-model='LoginData.email'>
                   <label for="email" style="color:white;" >Email</label>
                 </div>
                 <div class="input-field col s12" style="padding-right:15px;">
-                  <input id="password" type="password" class="validate" style="color:white;" v-model='userData.password' v-on:keyup='checkLength'>
+                  <input id="password" type="password" class="validate" style="color:white;" v-model='LoginData.password'>
                   <label for="password" style="color:white;" >Password</label>
                 </div>
               </div>
               <div class="row">
                 <div class="col s6">
-                  <a class="btn btn-block" @click='register'>Sign In</a>
+                  <a class="btn btn-block" @click='login'>Sign In</a>
                 </div>
                 <div class="col s6">
                   <a class="btn btn-block" @click='cancel'>Cancel</a>
@@ -84,11 +84,15 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      userData : {
+      RegisterData : {
         fullname: '',
         email : '',
         password : '',
         confirmpassword: ''
+      },
+      LoginData : {
+        email: '',
+        password: ''
       },
       check: true,
       validation: true
@@ -108,22 +112,49 @@ export default {
     }
   },
   methods: {
+
     backToHomepage () {
-      this.$router.push('/')
+      // this.$router.push('/')
+    },
+
+    login(){
+
+      const user = {
+        email: this.LoginData.email,
+        password: this.LoginData.password
+      }
+      const self = this
+
+      axios({
+        method: 'post',
+        url: 'http://localhost:3000/users/signin',
+        data: user
+      })
+      .then(response => {
+        this.$store.dispatch('cancelAll')
+        this.$store.dispatch('profileInfo', response.data.userInfo)
+        this.LoginData.email = ''
+        this.LoginData.password = ''
+        localStorage.setItem('authorization', response.data.jwtToken+'*#$_.'+response.data.userInfo._id)
+      })
+      .catch(err => {
+        self.loginData.email = ''
+        self.loginData.password = ''
+      })
     },
     register () {
-      if (this.validation == true && this.check == true && this.userData.password.length != 0) {
-
+      if (this.validation == true && this.check == true && this.RegisterData.password.length != 0) {
         const self = this
         axios({
           method: 'post',
-          url: 'http://35.240.238.226/signup',
-          data: self.userData
+          url: 'http://localhost:3000/users/signup',
+          data: self.RegisterData
         }).then(response => {
-            this.userData.fullname = '',
-            this.userData.email = '',
-            this.userData.password = '',
-            this.userData.confirmpassword = ''
+            this.$store.dispatch('cancelAll')
+            this.RegisterData.fullname = '',
+            this.RegisterData.email = '',
+            this.RegisterData.password = '',
+            this.RegisterData.confirmpassword = ''
             this.$router.push('/')
             swal({
               title: "Yosh!",
@@ -141,14 +172,14 @@ export default {
       }
     },
     checkSame () {
-      if (this.userData.password == this.userData.confirmpassword || this.userData.confirmpassword.length == 0) {
+      if (this.RegisterData.password == this.RegisterData.confirmpassword || this.RegisterData.confirmpassword.length == 0) {
         this.check = true
       } else {
         this.check = false
       }
     },
     checkLength () {
-      if (this.userData.password.length >= 6 || this.userData.password.length == 0) {
+      if (this.RegisterData.password.length >= 6 || this.RegisterData.password.length == 0) {
         this.validation = true
       } else {
         this.validation = false

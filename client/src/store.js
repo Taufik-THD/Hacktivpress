@@ -6,7 +6,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     registerForm: false,
-    loginForm: false
+    loginForm: false,
+    profile: null,
+    addForm: false
   },
   mutations: {
     register (state, register) {
@@ -18,6 +20,12 @@ export default new Vuex.Store({
     cancel (state, cancel) {
       state.registerForm = false
       state.loginForm = false
+    },
+    profile (state, profileInfo) {
+      state.profile = profileInfo
+    },
+    addNew (state, addForm) {
+      state.addForm = addForm
     }
   },
   actions: {
@@ -31,6 +39,12 @@ export default new Vuex.Store({
     },
     cancelAll ({ commit }, payload) {
       commit('cancel')
+    },
+    profileInfo ({ commit }, payload) {
+      commit('profile', payload)
+    },
+    addForm ({ commit }, payload) {
+      commit('addNew', payload)
     }
   }
 })

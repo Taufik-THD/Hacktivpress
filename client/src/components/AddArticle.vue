@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="">
     <div class="preloader-wrapper big active" v-if='form == true' style="margin-top:25%;">
       <div class="spinner-layer spinner-blue-only">
         <div class="circle-clipper left">
@@ -12,7 +12,8 @@
       </div>
     </div>
     <h6 v-if='form == true'>Save new item . . .</h6>
-    <div class="row"  style="margin: 10% 1% 1% 5%;" v-if='form == false'>
+    <div class="row"  style="background-color:rgba(0, 0, 0, 0.9); margin: 5.5% 1% 1% 2.5%; position:fixed; width:95%;" v-if='addForm == true'>
+      <h4>Add New Article</h4>
       <form class="col s12">
         <div class="row">
           <br>
@@ -67,6 +68,11 @@ export default {
       stock: '',
       file: '',
       form : false
+    }
+  },
+  computed : {
+    addForm () {
+      return this.$store.state.addForm
     }
   },
   methods: {
